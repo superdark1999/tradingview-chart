@@ -2,10 +2,10 @@
 
 import React, { useEffect, useRef } from "react";
 
-let tvScriptLoadingPromise;
+let tvScriptLoadingPromise: any;
 
 export default function TradingViewWidget() {
-  const onLoadScriptRef = useRef();
+  const onLoadScriptRef = useRef<any>();
 
   useEffect(() => {
     onLoadScriptRef.current = createWidget;
@@ -26,14 +26,17 @@ export default function TradingViewWidget() {
       () => onLoadScriptRef.current && onLoadScriptRef.current()
     );
 
-    return () => (onLoadScriptRef.current = null);
+    return () => {
+      onLoadScriptRef.current = null;
+    };
 
     function createWidget() {
       if (
         document.getElementById("tradingview_f6bc8") &&
-        "TradingView" in window
+        (("TradingView" in window) as any)
       ) {
-        new window.TradingView.widget({
+        const cloneWindow: any = window;
+        new cloneWindow.TradingView.widget({
           autosize: true,
           symbol: "NASDAQ:AAPL",
           interval: "D",
